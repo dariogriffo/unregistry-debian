@@ -26,11 +26,13 @@ jobs:
       - name: Build unregistry
         run: ./build.sh ${{ inputs.unregistry_version }} ${{ inputs.build_version }}
       
-      - name: Upload Artifacts
+      - name: Upload unregistry Artifact
         uses: actions/upload-artifact@v4
         with:
           name: artifact
-          path: *.deb 
+          path: | 
+            unregistry_*.deb
+            docker-pussh_*.deb 
 
 
   release-unregistry:
