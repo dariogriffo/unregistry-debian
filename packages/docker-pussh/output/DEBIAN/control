@@ -1,0 +1,11 @@
+Source: docker-ppush
+Section: utils
+Priority: optional
+Maintainer: Dario Griffo <dariogriffo@gmail.com>
+Homepage: https://github.com/psviderski/unregistry
+Package: docker-ppush
+Version: unregistry_VERSION-BUILD_VERSION+DIST
+Architecture: amd64
+Depends: 
+Description: docker-pussh lets you push images straight to remote Docker servers over SSH. It transfers only the missing layers, making it fast and efficient.
+

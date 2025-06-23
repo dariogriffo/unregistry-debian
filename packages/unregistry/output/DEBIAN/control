@@ -1,0 +1,11 @@
+Source: unregistry
+Section: utils
+Priority: optional
+Maintainer: Dario Griffo <dariogriffo@gmail.com>
+Homepage: https://github.com/psviderski/unregistry
+Package: unregistry
+Version: unregistry_VERSION-BUILD_VERSION+DIST
+Architecture: amd64
+Depends: systemd
+Description: a lightweight container image registry that stores and serves images directly from your Docker daemon's storage.
+

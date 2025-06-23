@@ -1,0 +1,14 @@
+# unregistry-service/etc/systemd/system/unregistry.service
+[Unit]
+Description=Unregistry Service
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/unregistry
+Type=simple
+Restart=on-failure
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target

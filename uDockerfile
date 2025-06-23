@@ -1,0 +1,36 @@
+ARG DEBIAN_DIST=bookworm
+
+FROM golang:1.24-alpine AS builder
+RUN apk add git
+
+WORKDIR /build
+RUN git clone https://github.com/psviderski/unregistry.git
+
+# Download and cache dependencies and only redownload them in subsequent builds if they change.
+
+RUN cd unregistry && go mod download && go mod verify && go build ./cmd/unregistry
+
+FROM buildpack-deps:$DEBIAN_DIST
+
+ARG DEBIAN_DIST
+ARG unregistry_VERSION
+ARG BUILD_VERSION
+ARG FULL_VERSION
+
+RUN mkdir -p /output/usr/local/bin/
+COPY --from=builder /build/unregistry/unregistry /output/usr/local/bin/
+RUN chmod +x /output/usr/local/bin/unregistry
+
+COPY packages/unregistry/output/DEBIAN/control /output/DEBIAN/
+COPY packages/unregistry/output/copyright /output/usr/share/doc/unregistry/
+COPY packages/unregistry/output/changelog.Debian /output/usr/share/doc/unregistry/
+COPY packages/unregistry/output/README.md /output/usr/share/doc/unregistry/
+COPY packages/unregistry/output/unregistry.service /output/etc/systemd/system/
+
+RUN sed -i "s/DIST/$DEBIAN_DIST/" /output/usr/share/doc/unregistry/changelog.Debian
+RUN sed -i "s/FULL_VERSION/$FULL_VERSION/" /output/usr/share/doc/unregistry/changelog.Debian
+RUN sed -i "s/DIST/$DEBIAN_DIST/" /output/DEBIAN/control
+RUN sed -i "s/unregistry_VERSION/$unregistry_VERSION/" /output/DEBIAN/control
+RUN sed -i "s/BUILD_VERSION/$BUILD_VERSION/" /output/DEBIAN/control
+
+RUN dpkg-deb --build /output /unregistry_${FULL_VERSION}.deb

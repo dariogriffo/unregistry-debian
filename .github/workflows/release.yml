@@ -1,0 +1,54 @@
+name: Build unregistry for Debian
+
+on:
+  workflow_dispatch:
+    inputs:
+      unregistry_version:
+        description: The version of unregistry to build.
+        type: string
+        required: true
+      build_version:
+        description: The build version.
+        type: string
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-unregistry:
+    name: Build
+    runs-on: ubuntu-latest    
+    steps:
+      - name: Checkout unregistry-debian
+        uses: actions/checkout@v4
+
+      - name: Build unregistry
+        run: ./build.sh ${{ inputs.unregistry_version }} ${{ inputs.build_version }}
+      
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifact
+          path: unregistry_*.deb
+
+
+  release-unregistry:
+    name: (Draft-)Release unregistry for Debian
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: build-unregistry
+    steps:
+      - name: Download All Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: artifact
+
+      - name: Publish Release Draft
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          files: unregistry_*.deb
+          name: ${{ inputs.unregistry_version }}+${{ inputs.build_version }}
+          tag_name: ${{ env.RELEASE_TAG }}
+          fail_on_unmatched_files: true
