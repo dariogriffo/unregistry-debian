@@ -1,9 +1,9 @@
-Source: docker-ppush
+Source: docker-pussh
 Section: utils
 Priority: optional
 Maintainer: Dario Griffo <dariogriffo@gmail.com>
 Homepage: https://github.com/psviderski/unregistry
-Package: docker-ppush
+Package: docker-pussh
 Version: unregistry_VERSION-BUILD_VERSION+DIST
 Architecture: amd64
 Depends: 
