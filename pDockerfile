@@ -17,7 +17,7 @@ COPY packages/docker-pussh/output/README.md /output/usr/share/doc/docker-pussh/
 RUN sed -i "s/DIST/$DEBIAN_DIST/" /output/usr/share/doc/docker-pussh/changelog.Debian
 RUN sed -i "s/FULL_VERSION/$FULL_VERSION/" /output/usr/share/doc/docker-pussh/changelog.Debian
 RUN sed -i "s/DIST/$DEBIAN_DIST/" /output/DEBIAN/control
-RUN sed -i "s/docker-pussh_VERSION/$docker-pussh_VERSION/" /output/DEBIAN/control
+RUN sed -i "s/unregistry_VERSION/$unregistry_VERSION/" /output/DEBIAN/control
 RUN sed -i "s/BUILD_VERSION/$BUILD_VERSION/" /output/DEBIAN/control
 
 RUN dpkg-deb --build /output /docker-pussh_${FULL_VERSION}.deb
