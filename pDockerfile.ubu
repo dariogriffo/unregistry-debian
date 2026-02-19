@@ -1,0 +1,23 @@
+ARG UBUNTU_DIST=noble
+FROM buildpack-deps:$UBUNTU_DIST
+
+ARG UBUNTU_DIST
+ARG unregistry_VERSION
+ARG BUILD_VERSION
+ARG FULL_VERSION
+
+RUN mkdir -p /output/usr/local/bin/
+RUN cd /output/usr/local/bin/ && wget https://raw.githubusercontent.com/psviderski/unregistry/refs/heads/main/docker-pussh && chmod +x docker-pussh
+
+COPY packages/docker-pussh/output/DEBIAN/control /output/DEBIAN/
+COPY packages/docker-pussh/output/copyright /output/usr/share/doc/docker-pussh/
+COPY packages/docker-pussh/output/changelog.Debian /output/usr/share/doc/docker-pussh/
+COPY packages/docker-pussh/output/README.md /output/usr/share/doc/docker-pussh/
+
+RUN sed -i "s/DIST/$UBUNTU_DIST/" /output/usr/share/doc/docker-pussh/changelog.Debian
+RUN sed -i "s/FULL_VERSION/$FULL_VERSION/" /output/usr/share/doc/docker-pussh/changelog.Debian
+RUN sed -i "s/DIST/$UBUNTU_DIST/" /output/DEBIAN/control
+RUN sed -i "s/unregistry_VERSION/$unregistry_VERSION/" /output/DEBIAN/control
+RUN sed -i "s/BUILD_VERSION/$BUILD_VERSION/" /output/DEBIAN/control
+
+RUN dpkg-deb --build /output /docker-pussh_${FULL_VERSION}.deb
