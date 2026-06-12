@@ -1,6 +1,6 @@
 unregistry_VERSION=$1
 BUILD_VERSION=$2
-declare -a arr=("jammy" "noble" "questing")
+declare -a arr=("jammy" "noble" "questing" "resolute")
 for i in "${arr[@]}"
 do
   UBUNTU_DIST=$i
