@@ -1,0 +1,22 @@
+Source: unregistry
+Section: utils
+Priority: optional
+Maintainer: Dario Griffo <dariogriffo@gmail.com>
+Build-Depends: debhelper-compat (= 13), golang-go, git, wget, ca-certificates
+Standards-Version: 4.6.2
+Homepage: https://github.com/psviderski/unregistry
+Rules-Requires-Root: no
+
+Package: unregistry
+Architecture: amd64
+Depends: ${misc:Depends}
+Description: Lightweight container image registry backed by Docker daemon storage
+ unregistry is a lightweight container image registry that stores and serves
+ images directly from your Docker daemon's storage.
+
+Package: docker-pussh
+Architecture: amd64
+Depends: ${misc:Depends}
+Description: Push Docker images to remote servers over SSH
+ docker-pussh lets you push images straight to remote Docker servers over SSH.
+ It transfers only the missing layers, making it fast and efficient.

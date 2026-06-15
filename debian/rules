@@ -1,0 +1,26 @@
+#!/usr/bin/make -f
+UNREGISTRY_VERSION := $(shell dpkg-parsechangelog -S Version | sed 's/[-~].*//')
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+
+override_dh_auto_build:
+	git clone https://github.com/psviderski/unregistry.git unregistry-src
+	cd unregistry-src && go build ./cmd/unregistry
+	wget -q "https://raw.githubusercontent.com/psviderski/unregistry/refs/heads/main/docker-pussh" -O docker-pussh
+	chmod +x docker-pussh
+
+override_dh_auto_install:
+	install -D -m 755 unregistry-src/unregistry debian/unregistry/usr/local/bin/unregistry
+	install -D -m 755 docker-pussh debian/docker-pussh/usr/local/bin/docker-pussh
+
+override_dh_auto_test:
+
+override_dh_auto_clean:
+	rm -rf unregistry-src docker-pussh
+
+override_dh_strip:
+
+override_dh_shlibdeps:
