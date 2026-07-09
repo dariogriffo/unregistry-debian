@@ -4,7 +4,7 @@ declare -a arr=("bookworm" "trixie" "forky" "sid")
 for i in "${arr[@]}"
 do
   DEBIAN_DIST=$i
-  FULL_VERSION=$unregistry_VERSION-${BUILD_VERSION}+${DEBIAN_DIST}_amd64
+  FULL_VERSION=$unregistry_VERSION-${BUILD_VERSION}~${DEBIAN_DIST}_amd64
   docker build . -t unregistry-$DEBIAN_DIST  --build-arg DEBIAN_DIST=$DEBIAN_DIST --build-arg unregistry_VERSION=$unregistry_VERSION --build-arg BUILD_VERSION=$BUILD_VERSION --build-arg FULL_VERSION=$FULL_VERSION -f uDockerfile
   id="$(docker create unregistry-$DEBIAN_DIST)"
   docker cp $id:/unregistry_$FULL_VERSION.deb - > ./unregistry_$FULL_VERSION.deb
