@@ -10,6 +10,8 @@ RUN mkdir -p /output/usr/local/bin/
 RUN cd /output/usr/local/bin/ && wget https://raw.githubusercontent.com/psviderski/unregistry/refs/heads/main/docker-pussh && chmod +x docker-pussh
 
 COPY packages/docker-pussh/output/DEBIAN/control /output/DEBIAN/
+COPY packages/docker-pussh/output/DEBIAN/postinst /output/DEBIAN/postinst
+RUN chmod 755 /output/DEBIAN/postinst
 COPY packages/docker-pussh/output/copyright /output/usr/share/doc/docker-pussh/
 COPY packages/docker-pussh/output/changelog.Debian /output/usr/share/doc/docker-pussh/
 COPY packages/docker-pussh/output/README.md /output/usr/share/doc/docker-pussh/

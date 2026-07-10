@@ -22,6 +22,10 @@ COPY --from=builder /build/unregistry/unregistry /output/usr/local/bin/
 RUN chmod +x /output/usr/local/bin/unregistry
 
 COPY packages/unregistry/output/DEBIAN/control /output/DEBIAN/
+COPY packages/unregistry/output/DEBIAN/postinst /output/DEBIAN/postinst
+COPY packages/unregistry/output/DEBIAN/prerm /output/DEBIAN/prerm
+RUN chmod 755 /output/DEBIAN/prerm
+RUN chmod 755 /output/DEBIAN/postinst
 COPY packages/unregistry/output/copyright /output/usr/share/doc/unregistry/
 COPY packages/unregistry/output/changelog.Debian /output/usr/share/doc/unregistry/
 COPY packages/unregistry/output/README.md /output/usr/share/doc/unregistry/
