@@ -21,6 +21,10 @@ The included docker pussh command (extra 's' for SSH) lets you push images strai
 This repository contains build scripts to produce the _unofficial_ Debian packages
 (.deb) for [unregistry](https://github.com/psviderski/unregistry/) hosted at [debian.griffo.io](https://debian.griffo.io)
 
+<p align="center">
+⭐⭐⭐ Love using unregistry on Debian? Show your support by starring this repo or [subscribing](https://buy.stripe.com/aFa28q8hr0lRdlm4a2enS01) — access to this repository requires a yearly subscription. ⭐⭐⭐
+</p>
+
 Currently supported debian distros are:
 - Bookworm
 - Trixie
