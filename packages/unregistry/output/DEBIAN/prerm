@@ -3,9 +3,11 @@ set -e
 
 case "$1" in
     remove|upgrade|deconfigure)
-        systemctl stop unregistry.service || true
-        systemctl disable unregistry.service || true
-        systemctl daemon-reload
+        if [ -d /run/systemd/system ]; then
+            systemctl stop unregistry.service || true
+            systemctl disable unregistry.service || true
+            systemctl daemon-reload || true
+        fi
         ;;
     *)
         echo "prerm called with unknown argument \`$1'" >&2

@@ -21,10 +21,25 @@ The included docker pussh command (extra 's' for SSH) lets you push images strai
 This repository contains build scripts to produce the _unofficial_ Debian packages
 (.deb) for [unregistry](https://github.com/psviderski/unregistry/) hosted at [deb.griffo.io](https://deb.griffo.io)
 
-Currently supported debian distros are:
-- Bookworm
-- Trixie
-- Sid
+Currently supported Debian distros are:
+- Bookworm (v12)
+- Trixie (v13)
+- Forky (v14)
+- Sid (testing)
+
+Currently supported Ubuntu distros are:
+- Jammy (22.04)
+- Noble (24.04)
+- Questing (25.10)
+- Resolute (26.04)
+
+Supported architectures:
+- amd64 (x86_64)
+- arm64 (aarch64)
+
+`unregistry` is built from the upstream tag with Go, so those are the two
+architectures cross-compiled here. `docker-pussh` is a bash script and ships
+as a single `Architecture: all` package that installs on any architecture.
 
 This is an unofficial community project to provide a package that's easy to
 install on Debian. If you're looking for the unregistry source code, see

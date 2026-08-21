@@ -1,12 +1,19 @@
 ARG UBUNTU_DIST=noble
 
+# The unregistry server is not published as a release asset (upstream ships it
+# as a container image), so it is built from the tag being packaged. Go
+# cross-compiles, so one builder produces every architecture.
 FROM golang:1.24-alpine AS builder
+ARG unregistry_VERSION
+ARG GOARCH=amd64
 RUN apk add git
 
 WORKDIR /build
-RUN git clone https://github.com/psviderski/unregistry.git
+RUN git clone --depth 1 --branch "v${unregistry_VERSION}" https://github.com/psviderski/unregistry.git
 
-RUN cd unregistry && go mod download && go mod verify && go build ./cmd/unregistry
+# Download and cache dependencies and only redownload them in subsequent builds if they change.
+RUN cd unregistry && go mod download && go mod verify \
+    && CGO_ENABLED=0 GOOS=linux GOARCH="${GOARCH}" go build -o unregistry ./cmd/unregistry
 
 FROM buildpack-deps:$UBUNTU_DIST
 
@@ -14,6 +21,7 @@ ARG UBUNTU_DIST
 ARG unregistry_VERSION
 ARG BUILD_VERSION
 ARG FULL_VERSION
+ARG ARCH
 
 RUN mkdir -p /output/usr/local/bin/
 COPY --from=builder /build/unregistry/unregistry /output/usr/local/bin/
@@ -34,5 +42,6 @@ RUN sed -i "s/FULL_VERSION/$FULL_VERSION/" /output/usr/share/doc/unregistry/chan
 RUN sed -i "s/DIST/$UBUNTU_DIST/" /output/DEBIAN/control
 RUN sed -i "s/unregistry_VERSION/$unregistry_VERSION/" /output/DEBIAN/control
 RUN sed -i "s/BUILD_VERSION/$BUILD_VERSION/" /output/DEBIAN/control
+RUN sed -i "s/SUPPORTED_ARCHITECTURES/$ARCH/" /output/DEBIAN/control
 
 RUN dpkg-deb --build /output /unregistry_${FULL_VERSION}.deb

@@ -7,7 +7,7 @@ ARG BUILD_VERSION
 ARG FULL_VERSION
 
 RUN mkdir -p /output/usr/local/bin/
-RUN cd /output/usr/local/bin/ && wget https://raw.githubusercontent.com/psviderski/unregistry/refs/heads/main/docker-pussh && chmod +x docker-pussh
+RUN cd /output/usr/local/bin/ && wget "https://raw.githubusercontent.com/psviderski/unregistry/v${unregistry_VERSION}/docker-pussh" && chmod +x docker-pussh
 
 COPY packages/docker-pussh/output/DEBIAN/control /output/DEBIAN/
 COPY packages/docker-pussh/output/DEBIAN/postinst /output/DEBIAN/postinst

@@ -1,5 +1,10 @@
 #!/usr/bin/make -f
+DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
 UNREGISTRY_VERSION := $(shell dpkg-parsechangelog -S Version | sed 's/[-~].*//')
+# unregistry is not published as a release binary, so it is built from the tag
+# being packaged; Go cross-compiles, so GOARCH is the only difference between
+# architectures.
+GOARCH := $(DEB_HOST_ARCH)
 
 %:
 	dh $@
@@ -7,9 +12,13 @@ UNREGISTRY_VERSION := $(shell dpkg-parsechangelog -S Version | sed 's/[-~].*//')
 override_dh_auto_configure:
 
 override_dh_auto_build:
-	git clone https://github.com/psviderski/unregistry.git unregistry-src
-	cd unregistry-src && go build ./cmd/unregistry
-	wget -q "https://raw.githubusercontent.com/psviderski/unregistry/refs/heads/main/docker-pussh" -O docker-pussh
+	@case "$(DEB_HOST_ARCH)" in \
+		amd64|arm64) ;; \
+		*) echo "Unsupported architecture: $(DEB_HOST_ARCH)"; exit 1 ;; \
+	esac
+	git clone --depth 1 --branch "v$(UNREGISTRY_VERSION)" https://github.com/psviderski/unregistry.git unregistry-src
+	cd unregistry-src && CGO_ENABLED=0 GOOS=linux GOARCH=$(GOARCH) go build -o unregistry ./cmd/unregistry
+	wget -q "https://raw.githubusercontent.com/psviderski/unregistry/v$(UNREGISTRY_VERSION)/docker-pussh" -O docker-pussh
 	chmod +x docker-pussh
 
 override_dh_auto_install:

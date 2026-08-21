@@ -3,9 +3,14 @@ set -e
 
 case "$1" in
     configure)
-        systemctl daemon-reload
-        systemctl enable unregistry.service
-        systemctl start unregistry.service
+        # Only touch systemd when it is actually running: containers, chroots
+        # and WSL have no system bus, and an unguarded systemctl there fails
+        # the whole installation.
+        if [ -d /run/systemd/system ]; then
+            systemctl daemon-reload || true
+            systemctl enable unregistry.service || true
+            systemctl start unregistry.service || true
+        fi
         ;;
     abort-upgrade|abort-remove|abort-deconfigure)
         ;;
